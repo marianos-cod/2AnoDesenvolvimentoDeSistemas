@@ -1,0 +1,34 @@
+Algoritmo "exercício 1 05/02"
+
+
+
+Var
+
+peso, multa, limite, excesso : Real
+
+
+
+Inicio
+
+multa <- 4.00
+
+limite <- 50.00
+
+escreval ("Quanto quilos foram pescados?")
+
+leia (peso)
+
+excesso <- peso - limite
+
+se (excesso >= limite) entao
+
+&nbsp;  escreval("vc não tem multas a pagar")
+
+senao
+
+&nbsp;  escreval("vc tem R$", excesso + multa, " a pagar")
+
+fimse
+
+Fimalgoritmo
+

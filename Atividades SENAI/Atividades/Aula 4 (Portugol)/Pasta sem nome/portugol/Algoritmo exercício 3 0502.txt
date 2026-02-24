@@ -1,0 +1,32 @@
+Algoritmo "exercício 3 05/02"
+
+Var
+valor1, valor2 : real
+
+Inicio
+escreval ("qual é o valor 1")
+leia(valor1)
+escreval ("qual é o valor 2")
+leia(valor2)
+se (valor1 = valor2) entao
+   escreval ("Ambos os numeros são iguais")
+fimse
+
+escreval ("qual é o valor 1")
+leia(valor1)
+escreval ("qual é o valor 2")
+leia(valor2)
+se (valor1 > valor2) entao
+   escreval ("Primeiro número é maior")
+fimse
+
+escreval ("qual é o valor 1")
+leia(valor1)
+escreval ("qual é o valor 2")
+leia(valor2)
+se (valor1 < valor2) entao
+   escreval ("Segundo número é maior")
+fimse
+
+
+Fimalgoritmo

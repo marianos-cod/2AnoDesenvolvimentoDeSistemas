@@ -1,0 +1,28 @@
+Algoritmo "Exercício 2"
+
+Var
+idade : real
+Inicio
+escreval ("Vamos categorizar, sua idade! Começe digitando sua idade")
+leia (idade)
+se (idade >= 5) e (idade <= 7) entao
+escreval ("Sua categoria é Infantil A!")
+fimse
+
+se (idade >= 8) e (idade <= 11) entao
+escreval ("Sua categoria é Infantil B!")
+fimse
+
+se (idade >= 12) e (idade <= 13) entao
+escreval ("Sua categoria é Juvenil A!")
+fimse
+
+se (idade >= 14) e (idade <= 17) entao
+escreval ("Sua categoria é Juvenil B!")
+fimse
+
+se (idade >= 18) entao
+escreval ("Sua categoria é Adulto!")
+fimse
+
+Fimalgoritmo
