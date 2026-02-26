@@ -5,6 +5,7 @@ mercadorias : vetor [1..3] de caractere
 valor : vetor [1..3] de real
 i : inteiro
 estoque : vetor [1..3] de inteiro
+numeros : vetor [1..10] de inteiro
 Inicio
 //Atividade 1
 mercadorias[1] <- "Shampoo"
