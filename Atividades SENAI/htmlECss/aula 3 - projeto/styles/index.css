@@ -1,0 +1,64 @@
+*{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0%;
+    padding: 0%;
+}
+body{
+    background-color: rgb(203, 207, 139)
+}
+
+header, footer{
+    font-size: 40pt;
+    width: 100%;
+    background-color: rgba(255, 251, 0, 0.884);
+    padding: 10px 0px;
+    text-align: center;
+    margin-bottom: 30px;
+    color: aliceblue;
+}
+
+main{
+    font-size: 14pt;
+    width: 80%;
+    margin: 50px auto;
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    background-color: rgba(255, 251, 0, 0.884);
+}
+/* Se tiver scroll, não deixe esse código (ou comente) */
+/* Caso não tenha scroll, deixe para ficar embaixo */
+footer{
+    position: absolute;
+}
+
+/* main{
+    border-radius: 5px;
+    font-size: 14pt;
+    text-align: center;
+    color: black;
+    background-color: rgba(255, 251, 0, 0.884) ;
+} */
+
+.noticia{
+    width: 80%;
+    margin: 20px auto;
+    display: flex;
+    background-color: rgb(245, 200, 51);
+    border-radius: 5px;
+}
+
+.descnoticia, .imagemnoticia{
+    width: 50%;
+    padding: 5px;
+}
+
+.imagemnoticia  img{
+    width: 200px;
+    border-radius: 10px;
+    display: flex;
+}
+
+#Trevor img{
+    width: 200px
+}
