@@ -1,0 +1,28 @@
+*{
+    margin: 0%;
+    padding: 0%;
+}
+
+.pai{
+    width: 100%;
+    height: 500px;
+    padding: 20px;
+    background-color: rgba(172, 171, 172, 0.801);
+    display: flex;
+    /* row linha */
+    /* column coluna */
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    /* start - esquerda */
+    /* end - direita */
+    /* center - centro */
+    /* space-between/around - separar centralizado */
+}
+
+.filho{
+    padding: 30px;
+    margin: 10px;
+    background-color: orange;
+    border-radius: 10px;
+}
