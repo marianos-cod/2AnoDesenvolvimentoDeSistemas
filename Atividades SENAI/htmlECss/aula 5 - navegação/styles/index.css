@@ -1,0 +1,40 @@
+*{
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    margin: 0%;
+    padding: 0%;
+}
+
+header{
+    width: 100%;
+    padding: 10px 0px;
+    display: flex;
+    border-bottom: solid 2px gray;
+}
+
+header aside{
+    width: 49%;
+    padding: 5px 0px;
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+
+#headerDireito{
+    justify-content: end;
+}
+
+main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#banner{
+    width: 100%;
+    height: 700px;
+    background-image: url("../images/Banner.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+}
