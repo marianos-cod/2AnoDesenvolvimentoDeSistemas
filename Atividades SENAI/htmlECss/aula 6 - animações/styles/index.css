@@ -1,0 +1,74 @@
+#botaoAnima{
+    padding: 5px;
+    margin: 10px;
+    background-color: var(--corSecundario);
+    color : var(--corPrimaria);
+    border: none;
+    transition : 0.3s;
+    border-radius: 100px;
+}
+
+#textoAnima:focus{
+    border: none;
+    transition: 1s;
+    border-bottom: 2px solid black;
+    border-radius: 10px;
+}
+
+#botaoAnima:active{
+    border: 2px solid black;
+}
+
+#botaoAnima:hover{
+    background-color: var(--corPrimaria);
+    color: var(--cortexto);
+    padding: 10px;
+}
+
+@keyframes teste {
+    0%{
+        width: 150px;
+        height: 150px;
+        border-radius: 0%;
+    }
+    20%{
+        border-radius: 100%;
+    }
+    40%{
+        margin-top: 30px;
+    }
+    50%{
+        background-color: #e4c722;
+    }
+    60%{
+        background-color: #d44e00;
+    }
+    70%{
+        background-color: #d40000;
+    }
+    80%{
+        transform: rotate(360deg);
+    }
+    90%{
+        margin-left: 900px;
+    }
+    100%{
+        margin-top: 0%;
+        width: 200px;
+        height: 200px;
+        border-radius: 0%;
+    }
+}
+
+#caixa{
+    width: 200px;
+    height: 200px;
+    animation-name: teste;
+    animation-duration: 5s;
+    background-color: var(--corlink);
+}
+
+/* #botaoAnima:hover{
+    animation-name: teste;
+    animation-duration: 3s;
+} */
