@@ -15,10 +15,17 @@
         margin-left: 1000px;
 }
 }
+#sim {
+    width: 200px;
+    height: 200px;
+    animation-name: anim;
+    animation-duration: 6s;
+    background-color: var(CorT);
+}
 #gato {
     width: 200px;
     height: 200px;
     animation-name: anim;
-    animation-duration: 5s;
+    animation-duration: 6s;
     background-color: var(CorT);
 }
