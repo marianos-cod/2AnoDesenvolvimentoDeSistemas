@@ -1,35 +1,50 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salário Família</title>
     <link rel="stylesheet" href="styles/index.css">
 </head>
+
+<body>
+    <form action="#">
+        <img src="images/salario-familia.jpg" alt="Previdência">
+        <h1>Salário Família</h1>
+        <div class="SalF">
+            <label for="nome">Nome : </label>
+            <input id="nome" required type="text" placeholder="Exemplo : João">
+        </div>
+        <div class="SalF">
+            <label for="salário">Número de filhos : </label>
+            <input id="salario" required type="number" placeholder="Exemplo : 2 Filhos">
+        </div>
+        <div class="SalF">
+            <label for="salário">salário Contribuição : </label>
+            <input id="salario" required type="number" placeholder="Exemplo : 1.621,00">
+        </div>
+
+       
+        <div id="valores">
+            <div class="divE">
+                <div class="tabela">Salário-contribuição</div>
+                <div class="tabela">Até R$ 806,80</div>
+                <div class="tabela">Entre R$806,81 e R$1.212,64</div>
+                <div class="tabela">Mais de R$1.212,64</div>
+            </div>
+
+            <div class="divD">
+                <div class="tabela">Cota do Salário Família</div>
+                <div class="tabela">R$41,37 por filho</div>
+                <div class="tabela">R$29,16 por filho</div>
+                <div class="tabela">Não há</div>
+            </div>
+        </div>
+        <div>
+            <button id="btn-calcula" type="submit">Calcular</button>
+        </div>
+    </form>
 </body>
-<form action="#">
-    <h1>FORMULARIO ABSURDO</h1>
-    <div class="formAssunto">
-        <label for="nome">Nome : </label>
-        <input id="nome" required type="text" placeholder="Exemplo : João">
-    </div>
-    <div class="Prevsituação">
-        <label for="cor">Cor : </label>
-        <input id="cor" required type="color">
-    </div>
-    <select name="filhos" id="filhos">
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3">3</option>
-        <option value="4 ou mais">4 ou mais</option>
-    </select>
-    <div class="formAssunto">
-        <label for="salário">salário : </label>
-        <input id="salario" required type="number" placeholder="Exemplo : João">
-    </div>
-    <div>
-        <button type="submit">Calcular</button>
-    </div>
-</form>  
-</body>
-</html>
+
+</html
