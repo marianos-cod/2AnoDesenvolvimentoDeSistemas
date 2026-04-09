@@ -11,15 +11,38 @@
     <h1>FORMULARIO ABSURDO</h1>
     <div class="formAssunto">
         <label for="nome">Nome : </label>
-        <input id="nome" type="text" placeholder="Exemplo : João">
+        <input id="nome" required type="text" placeholder="Exemplo : João">
+    </div>
+    <div class="formAssunto">
+        <label for="email">E-mail : </label>
+        <input id="email" required type="email">
+    </div>
+    <div class="formAssunto">
+        <label for="cor">Cor : </label>
+        <input id="cor" required type="color">
     </div>
     <div class="formAssunto">
         <label for="idade">Idade : </label>
-        <input id="idade" type="number" min="0" max="200" step="1">
+        <input id="idade" required type="number" min="0" max="200" step="1">
     </div>
     <div>
-        <button>ENVIAR</button>
+    <select name="estado" id="estado">
+        <option value="SP">SP</option>
+        <option value="DF">DF</option>
+        <option value="RJ">RJ</option>
+    </select>
     </div>
+    <textarea style="resize: both;" name="feedback" id="feedback" cols="30" rows="10"></textarea>
+    <div>
+        <button type="submit">ENVIAR</button>
+        <button type="reset">RESETAR</button>
+        <button type="button" id="bemvindo">NOME</button>
 </form>  
 </body>
+<script>
+    document.getElementById("bemcindo").addEventListener("click", () => {
+        nome = document.getElementById("nome").value
+        alert("Seja bem vindo(a)" +nome)
+    })
+</script>
 </html>
