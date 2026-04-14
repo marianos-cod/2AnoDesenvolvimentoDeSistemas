@@ -1,0 +1,27 @@
+@font-face {
+    font-family: PowerpuffGirls;
+    src: url('../fonts/powerpuff_girls/powerpuff\ girls\ font.ttf');
+}
+
+@font-face {
+    font-family: the_amazing_spiderman;
+    src: url('../fonts/the_amazing_spider_man/The\ Amazing\ Spider-Man.ttf girls\ font.ttf');
+}
+
+*{
+    padding: 0%;
+    margin: 0%;
+}
+
+:root{
+    --fontePrimaria : PowerpuffGirls;
+    --fonteSecundaria : the_amazing_spiderman;
+}
+
+h1{
+    font-family: var(--fontePrimaria);
+}
+
+p{
+    font-family: var(--fonteSecundaria);
+}
