@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sombras da República: A Trindade Filosófica</title>
+    <style>
+        :root {
+            --bg-color: #030303;
+            --text-color: #d4d4d4;
+            --accent-color: #5a0000;
+            --card-bg: #0d0d0d;
+            --border-color: #222;
+            --quote-color: #777;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* CONTAINER DO MAPA (HUD) */
+        #map-hud {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            z-index: 1000;
+        }
+
+        /* O MINI MAPA DE PROGRESSÃO */
+        #progression-map {
+            width: 110px;
+            height: 110px;
+            border-radius: 50%;
+            border: 3px solid #8a0303;
+            background-image: url('images/mapa.jpg');
+            background-size: cover;
+            background-position: center;
+            filter: sepia(40%) grayscale(30%) brightness(50%) contrast(150%);
+            box-shadow: 0 0 20px rgba(138, 3, 3, 0.4), inset 0 0 30px #000;
+            transition: all 0.5s ease;
+            cursor: pointer;
+        }
+
+        #progression-map:hover {
+            filter: sepia(20%) grayscale(10%) brightness(70%) contrast(130%);
+            box-shadow: 0 0 25px rgba(138, 3, 3, 0.8), inset 0 0 20px #000;
+            transform: scale(1.05);
+        }
+
+        /* BOTÃO DE ABRIR O MAPA */
+        #open-map-btn {
+            background-color: #0a0a0a;
+            color: #888;
+            border: 1px solid #444;
+            padding: 5px 10px;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Georgia', serif;
+        }
+
+        #open-map-btn:hover {
+            color: #fff;
+            border-color: #8a0303;
+            background-color: #1a0000;
+            box-shadow: 0 0 10px rgba(138, 3, 3, 0.5);
+        }
+
+        /* MODAL DO MAPA COMPLETO */
+        #map-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            backdrop-filter: blur(8px);
+        }
+
+        .map-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        #full-map-img {
+            max-width: 90vw;
+            max-height: 85vh;
+            border: 2px solid #333;
+            box-shadow: 0 0 50px rgba(0, 0, 0, 1);
+            filter: sepia(15%) brightness(90%) contrast(110%);
+        }
+
+        /* MARCADOR DE LOCALIZAÇÃO (ESTILO RESIDENT EVIL) */
+        #player-marker {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            border: 2px solid #ff0000;
+            border-radius: 50%;
+            background-color: rgba(255, 0, 0, 0.2);
+            box-shadow: 0 0 15px #ff0000;
+            pointer-events: none;
+            transform: translate(-50%, -50%); /* Centraliza no ponto */
+            display: none;
+            z-index: 10000;
+        }
+
+        #player-marker::after {
+            content: "";
+            position: absolute;
+            top: -5px; left: -5px; right: -5px; bottom: -5px;
+            border: 1px solid #ff0000;
+            border-radius: 50%;
+            animation: markerPulse 1.5s infinite;
+        }
+
+        @keyframes markerPulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .close-modal-btn {
+            margin-top: 20px;
+            background-color: transparent;
+            color: #fff;
+            border: 1px solid var(--accent-color);
+            padding: 10px 30px;
+            font-size: 14px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .close-modal-btn:hover {
+            background-color: var(--accent-color);
+        }
+
+        /* Animação de pulsar quando avança de fase */
+        @keyframes mapPulseHUD {
+            0% { box-shadow: 0 0 20px rgba(138, 3, 3, 0.4), inset 0 0 30px #000; border-color: #8a0303; }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.8), inset 0 0 10px #000; border-color: #ff1a1a; }
+            100% { box-shadow: 0 0 20px rgba(138, 3, 3, 0.4), inset 0 0 30px #000; border-color: #8a0303; }
+        }
+
+        .pulse-animation {
+            animation: mapPulseHUD 1.5s ease-out;
+        }
+
+        #game-container {
+            width: 100%;
+            max-width: 800px;
+            background-color: #0a0a0a;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 0 50px rgba(0, 0, 0, 0.95);
+            padding: 30px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 24px;
+            color: #fff;
+            border-bottom: 1px solid var(--accent-color);
+            padding-bottom: 15px;
+            margin-top: 0;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        #stats-panel {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            background-color: #000;
+            padding: 15px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 25px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-tag {
+            background-color: #1a1a1a;
+            padding: 5px 10px;
+            border: 1px solid #333;
+            color: #aaa;
+        }
+        
+        .stat-tag span { color: #fff; font-weight: bold; }
+
+        .card-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            font-size: 22px;
+            color: #fff;
+            margin: 0 0 10px 0;
+            letter-spacing: 2px;
+        }
+
+        .card-header .moment {
+            font-size: 14px;
+            color: var(--accent-color);
+            font-style: italic;
+        }
+
+        .central-question {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+            margin: 20px 0;
+            padding: 15px;
+            background: #0d0d0d;
+            border-left: 3px solid var(--accent-color);
+            border-right: 3px solid var(--accent-color);
+        }
+
+        #choices {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .choice-btn {
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+            padding: 20px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .choice-btn:hover {
+            background-color: #141414;
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 0, 0, 0.3);
+        }
+
+        .choice-title {
+            font-size: 16px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        
+        .philosophy-tag {
+            color: var(--accent-color);
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        .choice-quote {
+            font-style: italic;
+            color: var(--quote-color);
+            margin-bottom: 15px;
+            font-size: 15px;
+            border-left: 2px solid #444;
+            padding-left: 10px;
+        }
+
+        .choice-desc {
+            font-size: 14px;
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .final-quote {
+            font-size: 20px;
+            text-align: center;
+            font-style: italic;
+            color: var(--accent-color);
+            margin-top: 30px;
+            border-top: 1px solid #222;
+            padding-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="map-hud">
+    <div id="progression-map" onclick="openMap()" title="Ver panorama geral"></div>
+    <button id="open-map-btn" onclick="openMap()">Mapa Estratégico</button>
+</div>
+
+<div id="map-modal">
+    <div class="map-wrapper">
+        <img src="images/mapa.jpg" alt="Mapa Estratégico 1889" id="full-map-img">
+        <div id="player-marker"></div>
+    </div>
+    <button class="close-modal-btn" onclick="closeMap()">Retornar às Sombras</button>
+</div>
+
+<div id="game-container">
+    <h1>Sombras da República</h1>
+    
+    <div id="stats-panel">
+        <div class="stat-tag" id="tag-fase">Fase: <span>Prólogo</span></div>
+        <div class="stat-tag" id="tag-filosofia">Essência: <span>Observador</span></div>
+    </div>
+    
+    <div id="story-area">
+        </div>
+    
+    <div id="choices">
+        </div>
+</div>
+
+<script>
+    let playerPath = [];
+    let currentFaseName = "O Tabuleiro";
+
+    // MAPEAMENTO DE LOCALIZAÇÕES NO MAPA (Em porcentagem % da imagem)
+    // Você pode ajustar o 'top' e 'left' para alinhar perfeitamente com os locais da sua imagem.
+    const localizacoes = {
+        "O Tabuleiro": { top: '50%', left: '50%', visible: false }, // Prólogo, mapa fechado
+        "Pré-Golpe":   { top: '58%', left: '46%', visible: true },  // Ex: São Paulo
+        "O Golpe":     { top: '68%', left: '68%', visible: true },  // Ex: Rio de Janeiro
+        "A Nova Era":  { top: '25%', left: '68%', visible: true },  // Ex: Bahia
+        "O Legado":    { top: '50%', left: '50%', visible: false }  // Final
+    };
+
+    // Funções de Controle do Mapa
+    function openMap() {
+        const marker = document.getElementById('player-marker');
+        const loc = localizacoes[currentFaseName];
+
+        if (loc && loc.visible) {
+            marker.style.top = loc.top;
+            marker.style.left = loc.left;
+            marker.style.display = 'block';
+        } else {
+            marker.style.display = 'none';
+        }
+
+        document.getElementById('map-modal').style.display = 'flex';
+    }
+
+    function closeMap() {
+        document.getElementById('map-modal').style.display = 'none';
+    }
+
+    // Fecha o modal se o jogador clicar fora da imagem
+    document.getElementById('map-modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeMap();
+        }
+    });
+
+    function updateUI(fase, doutrina) {
+        currentFaseName = fase; // Atualiza para o marcador saber onde estamos
+        document.getElementById('tag-fase').innerHTML = `Fase: <span>${fase}</span>`;
+        document.getElementById('tag-filosofia').innerHTML = `Essência: <span>${doutrina}</span>`;
+        
+        // Efeito visual no mini mapa para demonstrar a progressão
+        const mapElement = document.getElementById('progression-map');
+        const mapPositions = ["center", "30% 70%", "70% 30%", "80% 80%"];
+        mapElement.style.backgroundPosition = mapPositions[Math.min(playerPath.length, mapPositions.length - 1)];
+        
+        // Dispara a animação de pulso no HUD
+        mapElement.classList.remove('pulse-animation');
+        void mapElement.offsetWidth; // Força o reflow do DOM
+        mapElement.classList.add('pulse-animation');
+    }
+
+    const cards = {
+        prologo: {
+            fase: "O Tabuleiro",
+            doutrina: "Observador",
+            html: `
+                <div class="card-header">
+                    <h2>As Regras do Pensamento</h2>
+                    <p class="moment">O império rachou. A coroa vai cair.</p>
+                </div>
+                <p style="text-align: center; font-size: 16px; line-height: 1.6;">
+                    Neste jogo, as armas não disparam sem uma ideia que puxe o gatilho.<br>
+                    Você deverá escolher o destino da nação baseado em três pensadores definitivos.<br><br>
+                    A ordem de Platão. O dever de Kant. A astúcia de Maquiavel.<br><br>
+                    <em>"O poder nunca é vazio. Ele sempre serve a uma filosofia."</em>
+                </p>
+            `,
+            choices: [
+                {
+                    title: "Analisar as peças. Virar a Primeira Carta.",
+                    target: "carta1"
+                }
+            ]
+        },
+        carta1: {
+            fase: "Pré-Golpe",
+            doutrina: "Indefinida",
+            html: `
+                <div class="card-header">
+                    <h2>🃏 Carta 1 — “Antes da Queda”</h2>
+                    <p class="moment">(Momento: o Império ainda existe, mas está desmoronando nas sombras)</p>
+                </div>
+                <div class="central-question">O poder deve ser mantido ou transformado?</div>
+            `,
+            choices: [
+                {
+                    title: "A) A Ordem dos Sábios <span class='philosophy-tag'>(Platão)</span>",
+                    quote: "“A cidade justa é aquela onde cada um cumpre o seu papel. A democracia é o prelúdio da tirania.”",
+                    desc: "Você defende uma hierarquia rígida. O Império não deve cair nas mãos da multidão ou de soldados rasos. Apenas os mais sábios, a aristocracia intelectual (os reis-filósofos), devem guiar o povo cego.",
+                    target: "carta2",
+                    pathName: "Platão"
+                },
+                {
+                    title: "B) O Dever Universal <span class='philosophy-tag'>(Kant)</span>",
+                    quote: "“Age apenas segundo uma máxima tal que possas querer que ela se torne lei universal.”",
+                    desc: "O Império violou a dignidade humana por séculos. A mudança não é uma opção política, é um dever moral absoluto (Imperativo Categórico). O sistema precisa ser reformado porque é o único meio ético de tratar o povo como um fim.",
+                    target: "carta2",
+                    pathName: "Kant"
+                },
+                {
+                    title: "C) A Tomada pela Virtù <span class='philosophy-tag'>(Maquiavel)</span>",
+                    quote: "“Não há nada mais difícil de executar do que a introdução de uma nova ordem de coisas.”",
+                    desc: "O Império está fraco. Onde há fraqueza, alguém tomará o espaço. A Fortuna sorri para os audazes; é hora de forçar a ruptura.",
+                    target: "carta2",
+                    pathName: "Maquiavel"
+                }
+            ]
+        },
+        carta2: {
+            fase: "O Golpe",
+            doutrina: "Em formação",
+            html: `
+                <div class="card-header">
+                    <h2>🃏 Carta 2 — “O Dia 15”</h2>
+                    <p class="moment">(Momento: O golpe acontece. Tropas nas ruas. O fim é iminente.)</p>
+                </div>
+                <div class="central-question">O fim justifica os meios?</div>
+            `,
+            choices: [
+                {
+                    title: "A) A Harmonia do Estado <span class='philosophy-tag'>(Platão)</span>",
+                    quote: "“Para o bem da pólis, os governantes podem usar a mentira nobre.”",
+                    desc: "O povo não sabe o que é melhor para si. Se for necessário omitir informações ou usar fábulas para acalmar as massas e manter a República alinhada com o Bem Maior, você fará.",
+                    target: "carta3",
+                    pathName: "Platão"
+                },
+                {
+                    title: "B) A Intenção Pura <span class='philosophy-tag'>(Kant)</span>",
+                    quote: "“A mentira é o abandono e, por assim dizer, a aniquilação da dignidade do homem.”",
+                    desc: "Um governo que nasce da traição está fadado à podridão. Você se recusa a agir pelas sombras. Se o Império deve cair, que seja às claras.",
+                    target: "carta3",
+                    pathName: "Kant"
+                },
+                {
+                    title: "C) A Preservação do Príncipe <span class='philosophy-tag'>(Maquiavel)</span>",
+                    quote: "“Os fins justificam os meios. É melhor ser temido do que amado.”",
+                    desc: "A moralidade filosófica é inútil no dia da batalha. Traição e intimidação são apenas ferramentas. Você fará o que for absolutamente necessário.",
+                    target: "carta3",
+                    pathName: "Maquiavel"
+                }
+            ]
+        },
+        carta3: {
+            fase: "A Nova Era",
+            doutrina: "Definida",
+            html: `
+                <div class="card-header">
+                    <h2>🃏 Carta 3 — “Depois da Coroa”</h2>
+                    <p class="moment">(Momento: A República já foi instaurada. É hora de governar.)</p>
+                </div>
+                <div class="central-question">O que legitima o seu novo governo?</div>
+            `,
+            choices: [
+                {
+                    title: "A) A República dos Iluminados <span class='philosophy-tag'>(Platão)</span>",
+                    quote: "“Até que os filósofos sejam reis, as cidades nunca terão descanso de seus males.”",
+                    desc: "O novo Brasil será governado por uma elite intelectual, um senado de 'guardiões' que ditará as leis e organizará o caos.",
+                    target: "final",
+                    pathName: "Platão"
+                },
+                {
+                    title: "B) O Reino dos Fins <span class='philosophy-tag'>(Kant)</span>",
+                    quote: "“Age de tal maneira que uses a humanidade sempre como um fim, nunca como um meio.”",
+                    desc: "A República só será legítima se sua constituição garantir a liberdade e o dever cívico absoluto. O estado de direito se torna a força maior.",
+                    target: "final",
+                    pathName: "Kant"
+                },
+                {
+                    title: "C) A Razão de Estado <span class='philosophy-tag'>(Maquiavel)</span>",
+                    quote: "“Um príncipe não deve ter outro objetivo além da guerra, suas regras e sua disciplina.”",
+                    desc: "Para não perder o Brasil, o governo será centralizado na figura de um líder implacável. Você governa com as garras.",
+                    target: "final",
+                    pathName: "Maquiavel"
+                }
+            ]
+        }
+    };
+
+    function renderScene(sceneId) {
+        if (sceneId === "final") {
+            renderFinal();
+            return;
+        }
+
+        const scene = cards[sceneId];
+        updateUI(scene.fase, playerPath.length > 0 ? playerPath[playerPath.length - 1] : scene.doutrina);
+        
+        document.getElementById('story-area').innerHTML = scene.html;
+        
+        const choicesBox = document.getElementById('choices');
+        choicesBox.innerHTML = '';
+
+        scene.choices.forEach(choice => {
+            const btn = document.createElement('button');
+            btn.className = 'choice-btn';
+            
+            let btnHTML = `<div class="choice-title">${choice.title}</div>`;
+            if (choice.quote) btnHTML += `<div class="choice-quote">${choice.quote}</div>`;
+            if (choice.desc) btnHTML += `<div class="choice-desc">${choice.desc}</div>`;
+            
+            btn.innerHTML = btnHTML;
+            
+            btn.onclick = () => {
+                if (choice.pathName) playerPath.push(choice.pathName);
+                renderScene(choice.target);
+            };
+            choicesBox.appendChild(btn);
+        });
+    }
+
+    function renderFinal() {
+        const trindade = playerPath.join(" → ");
+        updateUI("O Legado", "O Arquiteto do Sistema");
+
+        document.getElementById('story-area').innerHTML = `
+            <div class="card-header">
+                <h2>Fim de Jogo</h2>
+                <p class="moment">A poeira baixou. As ideias venceram.</p>
+            </div>
+            <div class="central-question" style="font-size: 16px;">
+                Evolução Filosófica da sua República:<br><br>
+                <span style="color: var(--accent-color); font-size: 22px; letter-spacing: 2px;">${trindade}</span>
+            </div>
+            <div class="final-quote">
+                “O corpo do país mudou de dono, mas a verdadeira revolução ocorreu dentro da mente de quem o governa.”
+            </div>
+        `;
+
+        const choicesBox = document.getElementById('choices');
+        choicesBox.innerHTML = '';
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<div class="choice-title" style="text-align: center; color: #fff;">Virar as páginas novamente (Reiniciar)</div>`;
+        btn.onclick = () => {
+            playerPath = [];
+            renderScene('prologo');
+        };
+        choicesBox.appendChild(btn);
+    }
+
+    // Iniciar Jogo
+    renderScene('prologo');
+</script>
+
+</body>
+</html>
